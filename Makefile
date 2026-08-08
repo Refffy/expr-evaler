@@ -1,17 +1,21 @@
 ifeq ($(OS),Windows_NT)
-	VENV_PYTHON = .venv/Scripts/python.exe
+	PYTHON ?= py -3
+	VENV_PYTHON := .venv/Scripts/python.exe
 else
-	VENV_PYTHON = .venv/bin/python
+	PYTHON ?= python3
+	VENV_PYTHON := .venv/bin/python
 endif
 
-.PHONY: test lexer setup
+.PHONY: setup test lexer
 
 setup:
 	python -m venv .venv
 	$(VENV_PYTHON) -m pip install -r requirements.txt
+	$(VENV_PYTHON) -m pip install -e .
 
 test:
 	$(VENV_PYTHON) -m pytest tests/ -v
 
 lexer:
-	$(VENV_PYTHON) -m expr_evaler.lexer "$(EXPR)"
+	$(VENV_PYTHON) lexer/lexer.py "$(EXPR)"
+
