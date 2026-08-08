@@ -1,4 +1,8 @@
-VENV_PYTHON = .venv/Scripts/python.exe
+ifeq ($(OS),Windows_NT)
+	VENV_PYTHON = .venv/Scripts/python.exe
+else
+	VENV_PYTHON = .venv/bin/python
+endif
 
 .PHONY: test lexer setup
 
