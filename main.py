@@ -1,5 +1,5 @@
 def main():
-    print("Hello from expr-evaler!")
+    print("plug")
 
 
 if __name__ == "__main__":
