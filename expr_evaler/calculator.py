@@ -8,7 +8,7 @@ def calculate(expression: str) -> int | float:
     tokens = lexer.produce()
 
     parser = RecursiveDescentParser(tokens)
-    tree = parser.parse_expr()
+    tree = parser.parse()
 
     if tree is None:
         raise SyntaxError("Ivalid expr")

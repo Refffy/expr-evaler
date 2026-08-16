@@ -7,7 +7,6 @@ from .ast import (
     BinaryOp, Sub, Add, Div, Mul
 )
 
-
 class RecursiveDescentParser:
     def __init__(self, tokens: list[Token]) -> None:
         self.pos = 0
@@ -28,6 +27,17 @@ class RecursiveDescentParser:
         token = self.tokens[self.pos]
         self.pos += 1
         return token
+
+    def parse(self) -> ASTNode:
+        ast = self.parse_expr()
+
+        current_token = self.peek()
+        if current_token is not None and current_token.type is not TokenType.EOF:
+            raise SyntaxError(
+                f"Unexpected token at position {current_token.pos}: '{current_token.lexeme}'"
+            )
+
+        return ast
 
     def parse_expr(self) -> ASTNode:
         left = self.parse_term()
