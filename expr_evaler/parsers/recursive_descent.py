@@ -4,7 +4,7 @@ from .ast import (
     ASTNode,
     Constant,
     UnaryOp, USub, UAdd,
-    BinaryOp, Sub, Add, Div, Mul, Pow
+    BinaryOp, Sub, Add, Mod, Div, Mul, Pow
 )
 
 
@@ -60,7 +60,7 @@ class RecursiveDescentParser:
         left = self.parse_factor()
 
         while (next_token := self.peek()) is not None and (
-            next_token.type in (TokenType.MUL_OP, TokenType.DIV_OP)
+            next_token.type in {TokenType.MUL_OP, TokenType.DIV_OP, TokenType.MODULO_OP}
         ):
             self.advance()
             right = self.parse_factor()
@@ -69,6 +69,8 @@ class RecursiveDescentParser:
                 left = BinaryOp(op=Mul(), left=left, right=right)
             elif next_token.type is TokenType.DIV_OP:
                 left = BinaryOp(op=Div(), left=left, right=right)
+            elif next_token.type is TokenType.MODULO_OP:
+                left = BinaryOp(Mod(), left=left, right=right)
 
         return left
 

@@ -2,7 +2,7 @@ from .ast import (
     ASTNode,
     Constant,
     UnaryOp, UAdd, USub,
-    BinaryOp, Add, Sub, Mul, Div, Pow
+    BinaryOp, Add, Sub, Mul, Div, Mod, Pow
 )
 
 
@@ -22,6 +22,8 @@ def evaluate(node: ASTNode) -> int | float:
             return evaluate(left) * evaluate(right)
         case BinaryOp(Div(), left, right):
             return evaluate(left) / evaluate(right)
+        case BinaryOp(Mod(), left, right):
+            return evaluate(left) % evaluate(right)
         case BinaryOp(Pow(), left, right):
             return evaluate(left) ** evaluate(right)
         case _:

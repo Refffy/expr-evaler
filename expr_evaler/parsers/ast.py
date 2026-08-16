@@ -45,6 +45,11 @@ class Div(BinaryOpType):
 
 
 @dataclass(frozen=True)
+class Mod(BinaryOpType):
+    pass
+
+
+@dataclass(frozen=True)
 class Pow(BinaryOpType):
     pass
 

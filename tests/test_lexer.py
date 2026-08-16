@@ -11,7 +11,7 @@ def get_simplified_tokens(
 
 
 def test_basic_arithmetic():
-    assert get_simplified_tokens("2 + 3 * (4 - 1)") == [
+    assert get_simplified_tokens("2 + 3 * (4 - 1) % 11.9") == [
         (TokenType.NUMBER, "2"),
         (TokenType.ADD_OP, "+"),
         (TokenType.NUMBER, "3"),
@@ -21,6 +21,8 @@ def test_basic_arithmetic():
         (TokenType.SUB_OP, "-"),
         (TokenType.NUMBER, "1"),
         (TokenType.RPAREN, ")"),
+        (TokenType.MODULO_OP, "%"),
+        (TokenType.NUMBER, "11.9"),
         (TokenType.EOF, None),
     ]
 
@@ -52,6 +54,19 @@ def test_numbers(expression: str, expected_lexeme: str):
 def test_pow_op(expression: str, expected_lexeme: str):
     assert get_simplified_tokens(expression) == [
         (TokenType.POW_OP, expected_lexeme),
+        (TokenType.EOF, None),
+    ]
+
+
+@pytest.mark.parametrize(
+    ("expression", "expected_lexeme"),
+    [
+        ("%", "%"),
+    ],
+)
+def test_mod_op(expression: str, expected_lexeme: str):
+    assert get_simplified_tokens(expression) == [
+        (TokenType.MODULO_OP, expected_lexeme),
         (TokenType.EOF, None),
     ]
 

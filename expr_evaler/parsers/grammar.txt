@@ -1,4 +1,4 @@
-Expr   ::= Term   ( ( "+" | "-" ) Term   )*
-Term   ::= Factor ( ( "*" | "/" ) Factor )*
-Factor ::= ( "+" | "-" ) Factor | Atom ( "**" Factor )?
+Expr   ::= Term   ( ( "+" | "-" | "%") Term   )*
+Term   ::= Factor ( ( "*" | "/" | "%") Factor )*
+Factor ::= ( "+" | "-") Factor | Atom ( "**" Factor )?
 Atom   ::= NUMBER | "(" Expr ")"

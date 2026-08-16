@@ -11,6 +11,7 @@ class TokenType(Enum):
     MUL_OP = "*"
     DIV_OP = "/"
     POW_OP = "**"
+    MODULO_OP = "%"
 
     LPAREN = "("
     RPAREN = ")"
@@ -31,6 +32,7 @@ class Lexer:
         "+": TokenType.ADD_OP,
         "-": TokenType.SUB_OP,
         "/": TokenType.DIV_OP,
+        "%": TokenType.MODULO_OP,
         "(": TokenType.LPAREN,
         ")": TokenType.RPAREN,
     }

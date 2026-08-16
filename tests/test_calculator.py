@@ -70,12 +70,13 @@ def test_parentheses(expression: str, expected: float):
 @pytest.mark.parametrize(
     ("expression", "expected"),
     [
+        ("-(1) + 2 % 3.0 / 1", 1.0),
         ("-2 + 3 * (4 - 1)", 7),
         ("10 / 2 * 5", 25.0),
         ("10 / (2 * 5)", 1.0),
         ("2.5 * 2 + 1.5", 6.5),
         ("12 ** (1+2)", 1728),
-        ("2 ** 3 ** 1 + 2", 10)
+        ("2 ** 3 ** 1 + 2", 10),
     ],
 )
 def test_complex_expressions(expression: str, expected: float):
