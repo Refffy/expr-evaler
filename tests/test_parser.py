@@ -10,8 +10,8 @@ from expr_evaler.parsers.ast import (
 
 
 def parse(expr: str) -> ASTNode:
-    tokens = Lexer(expr).produce()
-    return RecursiveDescentParser(tokens).parse_expr()
+    tokens = Lexer(expr).tokenize()
+    return RecursiveDescentParser(tokens).parse()
 
 
 @pytest.mark.parametrize(

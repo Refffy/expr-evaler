@@ -87,7 +87,7 @@ class Lexer:
             pos=start,
         )
 
-    def produce(self) -> list[Token]:
+    def tokenize(self) -> list[Token]:
         self.pos = 0
         tokens: list[Token] = []
 

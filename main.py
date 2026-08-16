@@ -6,15 +6,15 @@ from expr_evaler import Lexer, RecursiveDescentParser, calculate
 
 def print_tokens(expression: str) -> None:
     lexer = Lexer(expression)
-    for token in lexer.produce():
+    for token in lexer.tokenize():
         print(token)
 
 
 def print_ast(expression: str) -> None:
     lexer = Lexer(expression)
-    tokens = lexer.produce()
+    tokens = lexer.tokenize()
     parser = RecursiveDescentParser(tokens)
-    tree = parser.parse_expr()
+    tree = parser.parse()
 
     pprint.pprint(tree)
 

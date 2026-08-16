@@ -5,7 +5,7 @@ from .parsers.recursive_descent import RecursiveDescentParser
 
 def calculate(expression: str) -> int | float:
     lexer = Lexer(expression)
-    tokens = lexer.produce()
+    tokens = lexer.tokenize()
 
     parser = RecursiveDescentParser(tokens)
     tree = parser.parse()

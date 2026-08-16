@@ -7,7 +7,7 @@ from expr_evaler.exceptions import UnexpectedNumberError, UnknownLexemeError
 def get_simplified_tokens(
     expr: str,
 ) -> list[tuple[TokenType, str | None]]:
-    return [(token.type, token.lexeme) for token in Lexer(expr).produce()]
+    return [(token.type, token.lexeme) for token in Lexer(expr).tokenize()]
 
 
 def test_basic_arithmetic():
@@ -71,7 +71,7 @@ def test_ignore_whitespace(whitespace: str):
 )
 def test_invalid_numbers_raise_error(expression: str):
     with pytest.raises(UnexpectedNumberError):
-        Lexer(expression).produce()
+        Lexer(expression).tokenize()
 
 
 @pytest.mark.parametrize(
@@ -85,4 +85,4 @@ def test_invalid_numbers_raise_error(expression: str):
 )
 def test_unknown_lexeme_raises_error(expression: str):
     with pytest.raises(UnknownLexemeError, match="Unknown lexeme"):
-        Lexer(expression).produce()
+        Lexer(expression).tokenize()
