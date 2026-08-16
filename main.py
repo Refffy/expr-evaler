@@ -1,4 +1,5 @@
 import argparse
+import pprint
 
 from expr_evaler import Lexer, RecursiveDescentParser, calculate
 
@@ -15,7 +16,7 @@ def print_ast(expression: str) -> None:
     parser = RecursiveDescentParser(tokens)
     tree = parser.parse_expr()
 
-    print(tree)
+    pprint.pprint(tree)
 
 
 def main() -> None:
