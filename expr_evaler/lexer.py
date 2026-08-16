@@ -10,6 +10,7 @@ class TokenType(Enum):
     SUB_OP = "-"
     MUL_OP = "*"
     DIV_OP = "/"
+    POW_OP = "**"
 
     LPAREN = "("
     RPAREN = ")"
@@ -29,7 +30,6 @@ class Lexer:
     TOKENS: ClassVar[dict[str, TokenType]] = {
         "+": TokenType.ADD_OP,
         "-": TokenType.SUB_OP,
-        "*": TokenType.MUL_OP,
         "/": TokenType.DIV_OP,
         "(": TokenType.LPAREN,
         ")": TokenType.RPAREN,
@@ -51,6 +51,18 @@ class Lexer:
         lexeme = self.expr[self.pos]
         self.pos += 1
         return lexeme
+
+    def read_mul_pow(self) -> Token:
+        start = self.pos
+        operation = ""
+
+        if self.peek() == "*" and self.peek(1) == "*":
+            operation += self.advance()
+            operation += self.advance()
+            return Token(type=TokenType.POW_OP, lexeme=operation, pos=start)
+
+        operation += self.advance()
+        return Token(type=TokenType.MUL_OP, lexeme=operation, pos=start)
 
     def read_number(self) -> Token:
         start = self.pos
@@ -95,24 +107,26 @@ class Lexer:
             if lexeme.isspace():
                 self.advance()
                 continue
-
-            if (lexeme.isascii() and lexeme.isdigit()) or lexeme == ".":
+            elif (lexeme.isascii() and lexeme.isdigit()) or lexeme == ".":
                 tokens.append(self.read_number())
                 continue
+            elif lexeme == "*":
+                tokens.append(self.read_mul_pow())
+                continue
+            else:
+                token_type = self.TOKENS.get(lexeme)
 
-            token_type = self.TOKENS.get(lexeme)
+                if token_type is None:
+                    raise UnknownLexemeError(f"Unknown lexeme {lexeme} at position {self.pos}")
 
-            if token_type is None:
-                raise UnknownLexemeError(f"Unknown lexeme {lexeme} at position {self.pos}")
-
-            start = self.pos
-            tokens.append(
-                Token(
-                    type=token_type,
-                    lexeme=self.advance(),
-                    pos=start,
+                start = self.pos
+                tokens.append(
+                    Token(
+                        type=token_type,
+                        lexeme=self.advance(),
+                        pos=start,
+                    )
                 )
-            )
 
         tokens.append(
             Token(

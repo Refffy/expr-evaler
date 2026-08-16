@@ -44,6 +44,19 @@ def test_numbers(expression: str, expected_lexeme: str):
 
 
 @pytest.mark.parametrize(
+    ("expression", "expected_lexeme"),
+    [
+        ("**", "**"),
+    ],
+)
+def test_pow_op(expression: str, expected_lexeme: str):
+    assert get_simplified_tokens(expression) == [
+        (TokenType.POW_OP, expected_lexeme),
+        (TokenType.EOF, None),
+    ]
+
+
+@pytest.mark.parametrize(
     "whitespace",
     [
         "",

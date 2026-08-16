@@ -4,8 +4,9 @@ from .ast import (
     ASTNode,
     Constant,
     UnaryOp, USub, UAdd,
-    BinaryOp, Sub, Add, Div, Mul
+    BinaryOp, Sub, Add, Div, Mul, Pow
 )
+
 
 class RecursiveDescentParser:
     def __init__(self, tokens: list[Token]) -> None:
@@ -71,24 +72,49 @@ class RecursiveDescentParser:
 
         return left
 
-    def parse_factor(self) -> ASTNode:
-        token = self.advance()
+    def parse_atom(self) -> ASTNode:
+        token = self.peek()
 
-        match token.type:
-            case TokenType.SUB_OP:
-                return UnaryOp(op=USub(), operand=self.parse_factor())
-            case TokenType.ADD_OP:
-                return UnaryOp(op=UAdd(), operand=self.parse_factor())
-            case TokenType.NUMBER:
-                if not token.lexeme:
-                    raise SyntaxError("Invalid number token: empty lexeme")
+        if token is None:
+            raise SyntaxError("Unexpected end of input")
+
+        if token.type is TokenType.NUMBER:
+            if not token.lexeme:
+                raise SyntaxError("Invalid number token: empty lexeme")
+
+            self.advance()
+
+            try:
                 if "." in token.lexeme:
                     return Constant(value=float(token.lexeme))
                 return Constant(value=int(token.lexeme))
-            case TokenType.LPAREN:
-                expr_node = self.parse_expr()
-                if self.advance().type is not TokenType.RPAREN:
-                    raise SyntaxError("Closing parenthesis expected")
-                return expr_node
-            case _:
-                raise SyntaxError(f"Unexpected token type: {token.type}")
+            except ValueError:
+                raise SyntaxError(f"Invalid number format: '{token.lexeme}'")
+
+        if token.type is TokenType.LPAREN:
+            self.advance()
+            expr_node = self.parse_expr()
+            closing_paren = self.advance()
+            if closing_paren is None or closing_paren.type is not TokenType.RPAREN:
+                raise SyntaxError("Closing parenthesis expected")                
+            return expr_node
+
+        raise SyntaxError(f"Unexpected token type: {token.type}")
+
+    def parse_factor(self) -> ASTNode:
+        token = self.peek()
+
+        if token is not None and token.type is TokenType.SUB_OP:
+            self.advance()
+            return UnaryOp(op=USub(), operand=self.parse_factor())
+        elif token is not None and token.type is TokenType.ADD_OP:
+            self.advance()
+            return UnaryOp(op=UAdd(), operand=self.parse_factor())
+        else:
+            left = self.parse_atom()
+            if (next_token := self.peek()) is not None and next_token.type is TokenType.POW_OP:
+                self.advance()
+                right = self.parse_factor()
+                if left is not None and right is not None:
+                    return BinaryOp(op=Pow(), left=left, right=right)
+            return left

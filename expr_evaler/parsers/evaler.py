@@ -2,7 +2,7 @@ from .ast import (
     ASTNode,
     Constant,
     UnaryOp, UAdd, USub,
-    BinaryOp, Add, Sub, Mul, Div
+    BinaryOp, Add, Sub, Mul, Div, Pow
 )
 
 
@@ -22,5 +22,7 @@ def evaluate(node: ASTNode) -> int | float:
             return evaluate(left) * evaluate(right)
         case BinaryOp(Div(), left, right):
             return evaluate(left) / evaluate(right)
+        case BinaryOp(Pow(), left, right):
+            return evaluate(left) ** evaluate(right)
         case _:
             raise ValueError(f"Unknown AST node: {node}")

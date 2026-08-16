@@ -45,6 +45,11 @@ class Div(BinaryOpType):
 
 
 @dataclass(frozen=True)
+class Pow(BinaryOpType):
+    pass
+
+
+@dataclass(frozen=True)
 class Constant(ASTNode):
     value: int | float
 
