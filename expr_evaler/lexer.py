@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import ClassVar
 
-from exceptions import UnexpectedNumberError, UnknownLexemeError
+from expr_evaler.exceptions import UnexpectedNumberError, UnknownLexemeError
 
 
 class TokenType(Enum):
@@ -25,7 +26,7 @@ class Token:
 
 
 class Lexer:
-    TOKENS = {
+    TOKENS: ClassVar[dict[str, TokenType]] = {
         "+": TokenType.ADD_OP,
         "-": TokenType.SUB_OP,
         "*": TokenType.MUL_OP,
@@ -57,10 +58,8 @@ class Lexer:
         dot_seen = False
 
         if self.peek() == ".":
-            if not self.peek(1) or not self.peek(1).isdigit():
-                raise UnexpectedNumberError(
-                    f"Expected digit after '.' at position {start}"
-                )
+            if not (maybe_number := self.peek(1)) or not maybe_number.isdigit():
+                raise UnexpectedNumberError(f"Expected digit after '.' at position {start}")
 
             number = "0"
 
@@ -71,9 +70,7 @@ class Lexer:
 
             if lexeme == ".":
                 if dot_seen:
-                    raise UnexpectedNumberError(
-                        f"Unexpected second '.' at position {self.pos}"
-                    )
+                    raise UnexpectedNumberError(f"Unexpected second '.' at position {self.pos}")
 
                 dot_seen = True
                 number += self.advance()
@@ -99,16 +96,14 @@ class Lexer:
                 self.advance()
                 continue
 
-            if lexeme.isascii() and lexeme.isdigit() or lexeme == ".":
+            if (lexeme.isascii() and lexeme.isdigit()) or lexeme == ".":
                 tokens.append(self.read_number())
                 continue
 
             token_type = self.TOKENS.get(lexeme)
 
             if token_type is None:
-                raise UnknownLexemeError(
-                    f"Unknown lexeme {lexeme} at position {self.pos}"
-                )
+                raise UnknownLexemeError(f"Unknown lexeme {lexeme} at position {self.pos}")
 
             start = self.pos
             tokens.append(
@@ -128,18 +123,3 @@ class Lexer:
         )
 
         return tokens
-
-
-def main() -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("expr")
-    args = parser.parse_args()
-
-    for token in Lexer(args.expr).produce():
-        print(token)
-
-
-if __name__ == "__main__":
-    main()

@@ -1,16 +1,13 @@
 import pytest
 
-from exceptions import UnexpectedNumberError, UnknownLexemeError
-from lexer import Lexer, TokenType
+from expr_evaler import Lexer, TokenType
+from expr_evaler.exceptions import UnexpectedNumberError, UnknownLexemeError
 
 
 def get_simplified_tokens(
     expr: str,
 ) -> list[tuple[TokenType, str | None]]:
-    return [
-        (token.type, token.lexeme)
-        for token in Lexer(expr).produce()
-    ]
+    return [(token.type, token.lexeme) for token in Lexer(expr).produce()]
 
 
 def test_basic_arithmetic():
@@ -89,4 +86,3 @@ def test_invalid_numbers_raise_error(expression: str):
 def test_unknown_lexeme_raises_error(expression: str):
     with pytest.raises(UnknownLexemeError, match="Unknown lexeme"):
         Lexer(expression).produce()
-
